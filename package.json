@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "private": true,
+  "description": "Type dependency for local OpenCode plugins.",
+  "dependencies": {
+    "@opencode-ai/plugin": "1.18.18"
+  }
+}
