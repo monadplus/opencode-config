@@ -1,0 +1,11 @@
+node_modules/
+bun.lock
+package-lock.json
+pnpm-lock.yaml
+auth.json
+opencode.db*
+projects/
+storage/
+logs/
+cache/
+.DS_Store
