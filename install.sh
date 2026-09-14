@@ -8,6 +8,15 @@ config_dir="$config_home/opencode"
 backup_dir="$config_home/opencode-backup-$(date +%Y%m%d%H%M%S)-$$"
 backup_ready=0
 
+if command -v bun >/dev/null 2>&1; then
+    package_manager=bun
+elif command -v npm >/dev/null 2>&1; then
+    package_manager=npm
+else
+    printf 'error: Install Bun or npm to install dependencies, then rerun this script.\n' >&2
+    exit 1
+fi
+
 mkdir -p "$config_dir" "$config_dir/themes" "$config_dir/opencode-quota"
 
 backup_existing() {
@@ -47,8 +56,15 @@ link_path "$project_dir/agents" "$config_dir/agents"
 link_path "$project_dir/commands" "$config_dir/commands"
 link_path "$project_dir/plugins" "$config_dir/plugins"
 link_path "$project_dir/skills" "$config_dir/skills"
+link_path "$project_dir/scripts" "$config_dir/scripts"
 link_path "$project_dir/themes/dracula.json" "$config_dir/themes/dracula.json"
 link_path "$project_dir/quota-toast.jsonc" "$config_dir/opencode-quota/quota-toast.jsonc"
+
+printf 'Installing OpenCode dependencies with %s in %s\n' "$package_manager" "$config_dir"
+(
+    cd "$config_dir"
+    "$package_manager" install
+)
 
 printf '\nOpenCode configuration installed in %s\n' "$config_dir"
 printf 'Restart OpenCode before using the new configuration.\n'

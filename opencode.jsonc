@@ -67,6 +67,21 @@
     }
   },
 
+  "mcp": {
+    // Execute `opencode mcp auth slack` and open the link on the browser 
+    // (you may need to auth first with Okta, and try again).
+    // It will ask you to approve permissions.
+    // "slack": {
+    //   "type": "remote",
+    //   "url": "https://mcp.slack.com/mcp",
+    //   "enabled": true,
+    //   "oauth": {
+    //     "clientId": "1601185624273.8899143856786",
+    //     "redirectUri": "http://localhost:3118/callback"
+    //   }
+    }
+  },
+
   // Keep the built-in primary agents and narrowly authorize their workers.
   "agent": {
     "plan": {
