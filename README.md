@@ -1,24 +1,59 @@
 # OpenCode configuration
 
-Standalone copy of the OpenCode configuration used on the source machine.
-This project is intended to be published as a separate public GitHub
-repository and cloned on another workstation.
-
 ## Install
-
-Install OpenCode, clone this repository, and run:
 
 ```sh
 sh ./install.sh
 ```
 
-The installer links the configuration into
-`${XDG_CONFIG_HOME:-$HOME/.config}/opencode`. It does not copy authentication
-files or runtime state. Existing conflicting configuration entries are moved
-to a timestamped backup directory beside the OpenCode config directory.
+Authenticate separately on each machine with `/connect`.
 
-Authenticate separately on each machine with `/connect` or environment
-variables. Do not commit `auth.json`, `node_modules`, `bun.lock`, databases, or
-other generated state.
+## Run server-client mode
 
-Restart OpenCode after installation or configuration changes.
+```sh
+# Server
+export OPENCODE_SERVER_PASSWORD="..."
+opencode serve --hostname 127.0.0.1 --port 4096
+
+# Client
+export OPENCODE_SERVER_PASSWORD="..."
+# Use --dir <dir> to start in another directory
+opencode attach http://127.0.0.1:4096
+
+# Permission monitor
+bash "$HOME/opencode-config/scripts/opencode-permission-monitor.sh" \
+  --url http://127.0.0.1:4096 \
+  --log "$HOME/.local/state/opencode/permission-monitor.md" \
+  --state "$HOME/.local/state/opencode/permission-monitor.seen"
+```
+
+## Background services
+
+- [macOS (launchd)](macos/launchd/README.md)
+- [Linux (systemd)](linux/systemd/README.md)
+
+## Permission monitor
+
+Preview:
+
+```sh
+bash "$HOME/opencode-config/scripts/opencode-permission-monitor.sh" \
+  --url http://127.0.0.1:4096 \
+  --include-session-history \
+  --log "$HOME/.local/state/opencode/permission-monitor.md" \
+  --state "$HOME/.local/state/opencode/permission-monitor.seen" \
+  --once \
+  --dry-run
+```
+
+**Policy:** replies `always` unless regex checks detect destructive commands or
+secret access. This can approve Git and remote-action prompts configured as
+`ask`; the checks are heuristics, not a complete security boundary.
+
+- Logs and answered IDs live in `${XDG_STATE_HOME:-$HOME/.local/state}/opencode/`.
+  Logs include best-effort redaction and candidate rules for manual review.
+  Failed replies are retried; restart to begin a new day's log.
+
+## Tips & Tricks
+
+- Usage: `$ opencode stats --days 90 --models`

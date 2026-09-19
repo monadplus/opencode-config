@@ -3,6 +3,8 @@ bun.lock
 package-lock.json
 pnpm-lock.yaml
 auth.json
+launchd.env
+systemd.env
 opencode.db*
 projects/
 storage/

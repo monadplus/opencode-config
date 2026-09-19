@@ -1,0 +1,16 @@
+[Unit]
+Description=OpenCode server
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=%h
+Environment="PATH=%h/.opencode/bin:%h/.bun/bin:%h/.local/bin:/usr/local/bin:/usr/bin"
+EnvironmentFile=%E/opencode/systemd.env
+ExecStart=/usr/bin/env opencode serve --hostname 127.0.0.1 --port 4096
+Restart=always
+RestartSec=10
+UMask=0077
+
+[Install]
+WantedBy=default.target
